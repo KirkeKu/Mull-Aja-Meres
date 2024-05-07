@@ -3,7 +3,7 @@ define fade = Fade(0.4, 0.0, 0.4)
 define fastdissolve = Dissolve(0.2)
 init python:
     renpy.music.register_channel("mar", "music")
-#Tegelased, nimesildid
+#Tegelased ja nimesildid
 define ai = Character("Aisling", color="#FCED8F")
 define gl = Character("Glass", color="#333333")
 define ca = Character("Carina", color="#e35567")
@@ -31,7 +31,7 @@ image ca neutral = im.FactorScale("carina_neutral.png", spriteSize)
 image ca sigh = im.FactorScale("carina_sigh.png", spriteSize)
 image ca happy = im.FactorScale("carina_happy.png", spriteSize)
 
-#Taustapildid
+#Taustad
 image bg classroom = "bg classroom.jpg"
 image bg must = "bg must.jpg"
 image bg clubroom = "bg clubroom.jpg"
@@ -48,7 +48,7 @@ image bg park = "bg park.jpg"
 image bg muusika = im.FactorScale("bg muusika.jpg", 0.5)
 image bg library = im.FactorScale("bg library.jpg", 0.5)
 
-#Asukoha tag-id
+#Positsioonid
 transform midleft:
     xalign 0.27 yalign 1.0
 transform midright:
@@ -75,19 +75,22 @@ init:
 
 ########################################## GAME START ######################################
 label start:
+    #Muusika start
     play music "chill bg.mp3" fadeout 1.0 fadein 1.0
-#Mängija nime muutujana salvestamine. Kui mängija jätab kasti tühjaks, saab nimeks automaatselt "Mängija".
+
+#Mängija nime muutujana salvestamine
     $ player_name = renpy.input("Mis saab olema su nimi?", length=14)
     $ player_name = player_name.strip()
     if not player_name:
         $ player_name = "Mängija"
 
-#Esimene stseen, taustapilt on klassiruum. Esimene dialoog.
     scene bg classroom
-
+#Esimene stseen
+#Narratsioon
     "Aknast välja vaadates sa näed päikest eredalt säramas."
     "Sa näed linde lendamas üle taeva. Üks varblane maandub aknalaua peale ja vaatab sulle otsa."
     "Sa naeratad talle ja kogu maailm tundub korraga olevat rahulik."
+#Tegelaste nimelühendid
     op"[player_name]? [player_name]!"
     pov"Ah, jah, kohal!"
     "Õpetaja vaatab sinu poole ja noogutab kiiresti. Kool alles algas ja tundub, et ta tahab juba koju minna."
@@ -107,7 +110,7 @@ label start:
     "Sa kõnnid mööda koridore, vaatad klassidesse sisse ja proovid välja mõelda, milline nendest klubidest oleks piisavalt huvitav, et sa poole aasta pealt ära ei läheks."
     pov"(Olgu, mis on minu valikud?)"
 
-#Järgnevad valikud on kõik nähtavad. Kui mängija valib ühe neist, saadetakse ta tagasi menüüssee, kus juba nähtud valikud on peidetud, kuni mängija on kõik valikud läbi proovinud.
+#Menüü valikute kadumine
     $ robootika = True
     $ aiandus = True
     $ keemia = True
@@ -139,6 +142,7 @@ label klubid:
     "Sa astud tuppa sisse ja näed kolme inimest."
     "Üks istub akna ääres ja kirjutab midagi märkmikusse. Teised kaks räägivad üksteisega, kuni üks nendest, tal olid ilusad punased juuksed, näeb sind ja kõnnib su juurde."
 
+#Spraidi ilmumine
     show ca happy at midleft with dissolve
     ca"Tere, tule edasi!"
     "Ta haarab su käest kinni ja tõmbab su klassi ette."
@@ -158,10 +162,11 @@ label klubid:
     "Xiao vaatab üles, naeratab ja lehvitab. Carina vaatab uuesti sulle otsa."
     hide xy happy  with dissolve
     ca"Ja sina oled?"
-    #Mängija peab ise vajutama nuppu ekraanil, et vastata ja dialoogi jätkata.
+    #Mängija peab ise vajutama nuppu ekraanil, et vastata ja dialoogi jätkata. Siin kasutatakse ka muutuja põhjal mängija sisestatud nime.
     menu:
         "Mina olen [player_name].":
             pov"Mina olen [player_name]."
+    #Esimene valik, mis punkte annab.
     ca"Meeldiv tutvuda, [player_name]. Väike küsimus, mida mul paluti küsida kõikidelt klubi huvilistelt. Miks sa siia tulla tahad?"
     menu:
         "Miks sa siia tulla tahad?"
@@ -170,8 +175,11 @@ label klubid:
             pov" Ma arvan, et see klubi aitaks mul oma loovust arendada ja teiste kunstide kohta õppida."
             show ca happy
             "Carina naeratab laialt."
+            #Carina punktisummale lisatakse 3
             $ carina += 3
+            #Tekib teavitus
             $ renpy.notify('Teenisid Carinaga 3 sõpruspunkti')
+            #Muutuja jätab siin tehtud valiku meelde ja selle põhjal muutub ka dialoog tulevikus.
             $ irenedialoog1 = 1
             ca"See on väga hea vastus! Peaks selle igaks juhuks meelde jätma."
         "Esimene huvitav klubi":
@@ -195,10 +203,12 @@ label klubid:
     "Hetk hiljem sa kuuled, kuidas keegi vaikselt ukse avab. Sisse astub üks poiss, kes noogutab ja istub ühe laua äärde maha. Carina mõtleb hetke ja kõnnib tema juurde."
     show ca happy at jumper with dissolve
     ca"Tere tulemast loovuse klubisse! Mina olen president Carina. See on asepresident Irene."
+    #Irene sprait tekib ja Carina sprait kaob ekraanilt samaaegselt.
     show ir neutral at midleft
     hide ca happy
     with fastdissolve
     "Irene lehvitab uustulnukale."
+    #Irene sprait kaob samaaegselt Carina spraidi uuesti ilmumisega.
     hide ir neutral
     show ca happy at jumper
     with fastdissolve
@@ -222,6 +232,7 @@ label klubid:
     show ca neutral  with dissolve
     "Carina, kes oli natuke ehmunud, kõnnib tema ette."
     ca"Eh, ei, sa ei ole hilinenud. Em, tere tulemast loovuse klubisse! Mina olen president Carina."
+    #Tihe spraitide vahetamine
     hide ai neutral with fastdissolve
     show ir neutral at midright with fastdissolve
     "Irene astub sammu ette."
@@ -284,15 +295,18 @@ label klubid:
     $ renpy.force_autosave()
 
 label tutorial:
+    #Sissejuhatus mälumängu
     centered"Pärast seda pikka päeva, oleks mõistlik meelde tuletada mis kõik täna juhtus."
     menu:
         "Mis on klubi nimi?"
         "Loovuse klubi":
+            #Õige vastus
             $ minigame += 1
             $ renpy.notify('Õige vastus')
             centered"Mäletasid õigesti! Näed, said isegi punkti selle eest."
 
         "Kunsti klubi":
+            #vale vastus
             $ renpy.notify('Vale vastus')
             centered"Näed, ongi vaja korrata. Valesti mäletasid. Õige vastus oli 'Loovuse klubi'!"
 
@@ -336,7 +350,9 @@ label tutorial:
     centered"Vinge, saidki kõik vastatud!"
     centered"Kui sa kõik kolm detaili õigesti mäletasid, saad sa võimaluse õhtul ühele klubikaaslasele helistada!"
     centered"Noh, vaatame, kas sa mäletasid õigesti."
+    #Tulemuste näitamine
     centered"{size=*2}Õigesti: [minigame]{/size}"
+    #Skoori lugemine
     if minigame < 3:
         centered"Tundub, et mitte. Kahju, aga homme saad uuesti proovida!"
 
@@ -344,6 +360,7 @@ label tutorial:
         centered"Tundub nii! Palju õnne! Saad kellelegi täna veel helistada."
         menu:
             "Kellele sa helistada tahaksid?"
+            #Iga tegelase unikaalne dialoog telefonile vastamisel
             "Carina":
                 "Sa otsustad helistada Carinale."
                 "Telefon heliseb hetke, enne kui ta vastab."
@@ -394,6 +411,7 @@ label tutorial:
                 $ renpy.notify('Teenisid Aislingiga 2 sõpruspunkti')
 
     "Pika õhtu lõpuks otsustad sa lõpuks magama minna."
+    #Hetkese punktiskoori näitamine
     call screen display_stats
 
 #Teine päev
@@ -509,7 +527,7 @@ label day2:
     ca"Ja kolmandaks: Miks sa siia klubisse tulla tahtsid?"
     hide ca neutral with fastdissolve
     pov"(Kellega ma peaks esimesena rääkima?)"
-#Kellega rääkida
+#Viiest valikust saab valida ainult 3
     $ menuchoices = 0
     $ cad1 = True
     $ ird1 = True
@@ -600,6 +618,7 @@ label day1:
                 $ klubi = True
                 label ireneday1:
                     menu:
+                        #Veel üks näide vastusevariantide kadumisest
                         "Millega sa tegeled/Mis on sinu hobid?" if hobi == True:
                             pov"Mis sinu hobiks siis on?"
                             ir"Programmeerin ise mänge ja muid asju. Enamus inimesi arvab, et see on jube keeruline, aga see on sama nagu uue keele õppimine."
@@ -995,6 +1014,7 @@ label day3:
     pov"Hei. Mis teed?"
     xy"Hei. Irene viskas mind välja. Ütles, et ta tahab ettevalmistusi teha või midagi."
     pov"Õigus jah, täna pidi tema ju rääkima meile."
+    #Vastus oleneb mängija varasemast valikust
     if ird1 == False:
         pov"Ta tegeleb programmeerimise ja videomängude tegemisega, onju?"
         pov"Tundub veidi keeruline, ausalt."
@@ -1047,6 +1067,7 @@ label day3:
     ir"Otsige sealt üles \“kui start\” klots. Peaks olema kollast värvi."
     ir"Kõik, mis sellele tükile järgneb, juhtub peale start nupu vajutamist. Nüüd on meil vaja tegelast ja selle jaoks on vaja spraiti. "
     ir"Te saate kõik otsida mingisuguse pildi oma mängu tegelaseks. Lihtsalt arvestage, et ta oleks piisavalt väike."
+#Mängija valikust oleneb dialoog ja mälumängu õige vastus
     menu:
         "Kelle sa enda tegelaseks tahad valida?"
 
@@ -1216,6 +1237,7 @@ label day3:
     "Lõpus küsib Irene kokkuvõtvat tagasisidet."
     show ir neutral at jumper
     ir"Olgu, saite kõik proovida. Mis te arvasite?"
+    #Mitme punktiarvuga valik
     menu:
         "Anna Irenele mängu kohta tagasisidet."
 
@@ -3746,10 +3768,11 @@ label skipimeviimasevoimaluse:
 
 
 
-#Endings
+#Lõpud
 scene bg must
 with fade
 centered"{size=*2}Laupäev{/size}"
+#Punktiarvu võrdlemine, jätkamine kõrgeima punktiarvuga tegelase lõpu suunas
 label class_end:
     if glass > max(aisling, xiaoyun, carina, irene):
         jump glass_ending
@@ -3763,7 +3786,7 @@ label class_end:
         jump irene_ending
     else:
         jump koos_end
-
+#Kui kahel tegelasel juhtub mängu lõpus olema võrdselt punkte, on eraldi kuues lõpp
 
 label aisling_ending:
     play music "chill bg.mp3" fadeout 1.0 fadein 1.0
@@ -4552,7 +4575,7 @@ label end:
     play music "chill night music.mp3" fadeout 1.0 fadein 1.0
     centered"{size=*2}Mängu lõpp{/size}"
     centered"{size=*2}Täname mängimast!{/size}"
-    centered"{size=*2}Dialoog - Carmen{/size}"
+    centered"{size=*2}Dialoog - Lehtmets{/size}"
     centered"{size=*2}Tegelaste spraidid - Õispuu{/size}"
-    centered"{size=*2}Programmeerimine - Kirke{/size}"
+    centered"{size=*2}Programmeerimine - Kupits{/size}"
     return
