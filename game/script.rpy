@@ -3,7 +3,7 @@ define fade = Fade(0.4, 0.0, 0.4)
 define fastdissolve = Dissolve(0.2)
 init python:
     renpy.music.register_channel("mar", "music")
-#Characters
+#Tegelased, nimesildid
 define ai = Character("Aisling", color="#FCED8F")
 define gl = Character("Glass", color="#333333")
 define ca = Character("Carina", color="#e35567")
@@ -15,7 +15,7 @@ define kt = Character("Abiline", color="#EFBC89")
 
 define spriteSize = 0.26
 
-#Sizes
+#Spraidid ja suurused
 image ai neutral = im.FactorScale("aisling_neutral.png", spriteSize)
 image ai happy = im.FactorScale("aisling_happy.png", spriteSize)
 image gl neutral = im.FactorScale("glass_neutral.png", spriteSize)
@@ -31,7 +31,7 @@ image ca neutral = im.FactorScale("carina_neutral.png", spriteSize)
 image ca sigh = im.FactorScale("carina_sigh.png", spriteSize)
 image ca happy = im.FactorScale("carina_happy.png", spriteSize)
 
-#BGs
+#Taustapildid
 image bg classroom = "bg classroom.jpg"
 image bg must = "bg must.jpg"
 image bg clubroom = "bg clubroom.jpg"
@@ -48,6 +48,7 @@ image bg park = "bg park.jpg"
 image bg muusika = im.FactorScale("bg muusika.jpg", 0.5)
 image bg library = im.FactorScale("bg library.jpg", 0.5)
 
+#Asukoha tag-id
 transform midleft:
     xalign 0.27 yalign 1.0
 transform midright:
@@ -61,7 +62,7 @@ transform jumper:
     ease .01 yoffset -4
     ease .01 yoffset 0
 
-#Variables
+#Muutujad
 init:
      $ aisling = 0
      $ glass = 0
@@ -75,12 +76,13 @@ init:
 ########################################## GAME START ######################################
 label start:
     play music "chill bg.mp3" fadeout 1.0 fadein 1.0
-
+#Mängija nime muutujana salvestamine. Kui mängija jätab kasti tühjaks, saab nimeks automaatselt "Mängija".
     $ player_name = renpy.input("Mis saab olema su nimi?", length=14)
     $ player_name = player_name.strip()
     if not player_name:
         $ player_name = "Mängija"
 
+#Esimene stseen, taustapilt on klassiruum. Esimene dialoog.
     scene bg classroom
 
     "Aknast välja vaadates sa näed päikest eredalt säramas."
@@ -97,6 +99,7 @@ label start:
     pov"(Ah, õigus, klubid. Need on asjad. Peaks endale ühe leidma, lihtsalt igaksjuhuks. Aga milline oleks parim?)"
     "Neid mõtteid mõlkudes istusid sa tunni lõpuni."
 
+#Stseeni muutus, taustapildiks koridor.
     scene bg hallway
     with fade
 
@@ -104,6 +107,7 @@ label start:
     "Sa kõnnid mööda koridore, vaatad klassidesse sisse ja proovid välja mõelda, milline nendest klubidest oleks piisavalt huvitav, et sa poole aasta pealt ära ei läheks."
     pov"(Olgu, mis on minu valikud?)"
 
+#Järgnevad valikud on kõik nähtavad. Kui mängija valib ühe neist, saadetakse ta tagasi menüüssee, kus juba nähtud valikud on peidetud, kuni mängija on kõik valikud läbi proovinud.
     $ robootika = True
     $ aiandus = True
     $ keemia = True
@@ -154,6 +158,7 @@ label klubid:
     "Xiao vaatab üles, naeratab ja lehvitab. Carina vaatab uuesti sulle otsa."
     hide xy happy  with dissolve
     ca"Ja sina oled?"
+    #Mängija peab ise vajutama nuppu ekraanil, et vastata ja dialoogi jätkata.
     menu:
         "Mina olen [player_name].":
             pov"Mina olen [player_name]."
