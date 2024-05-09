@@ -62,7 +62,7 @@ transform jumper:
     ease .01 yoffset -4
     ease .01 yoffset 0
 
-#Muutujad
+#Globaalsed muutujad
 init:
      $ aisling = 0
      $ glass = 0
